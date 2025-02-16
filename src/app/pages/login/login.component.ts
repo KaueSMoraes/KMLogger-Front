@@ -7,6 +7,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common'; 
 import { LogoComponent } from '../../components/logo/logo.component';
+import { BeginLayoutComponent } from "../../layouts/begin-layout/begin-layout.component";
+import { FormCardComponent } from '../../components/form-card/form-card.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -18,13 +21,16 @@ import { LogoComponent } from '../../components/logo/logo.component';
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
-  ],
+    BeginLayoutComponent,
+    FormCardComponent,
+    MatSnackBarModule,
+],
   standalone: true,
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 
-export class LoginComponent {
+export class LoginComponent  {
   loginForm: FormGroup;
 
   //Quando constroi o componente, cria o formulário de login com base no FormBuilder

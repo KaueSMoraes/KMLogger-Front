@@ -10,5 +10,4 @@ import { CommonModule } from '@angular/common';
 })
 export class LogoComponent 
 {
-  logoSrc = require('src/assets/Logo.svg');
 }

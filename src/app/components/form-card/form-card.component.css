@@ -1,0 +1,51 @@
+.form-card mat-card {
+    background: transparent; 
+    border: 2px solid #7B00FF; 
+    border-radius: 12px;
+    backdrop-filter: blur(10px); 
+    padding: 20px;
+    text-align: center;
+    color: white; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+    max-width: 400px;
+    width: 100%;
+}
+
+mat-card-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: #cabfd6; 
+}
+
+.mat-input-element {
+    color: white !important; 
+}
+
+
+mat-form-field {
+    width: 100%;
+}
+
+input.mat-input-element {
+    background: transparent !important; 
+    border-bottom: 2px solid #7B00FF !important; 
+    color: white !important; 
+}
+
+::placeholder {
+    color: rgba(255, 255, 255, 0.6); 
+}
+
+button {
+    background: #7B00FF;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: 0.3s ease;
+}
+
+button:hover {
+    background: #5A00CC;
+}

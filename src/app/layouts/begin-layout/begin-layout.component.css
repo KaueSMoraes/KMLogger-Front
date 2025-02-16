@@ -1,0 +1,20 @@
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh; /* Garante que ocupa toda a altura */
+    background: linear-gradient(135deg, #23036A, #310f5f, #2d1663);
+
+    overflow: hidden; 
+}
+
+.content-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}

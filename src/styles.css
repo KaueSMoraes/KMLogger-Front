@@ -1,4 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; 
+}
+
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+@keyframes glowing-border {
+    0% {
+        border-image-source: linear-gradient(90deg, #7B00FF, #FF00FF);
+        border-image-slice: 1;
+    }
+    50% {
+        border-image-source: linear-gradient(90deg, #FF00FF, #7B00FF);
+        border-image-slice: 1;
+    }
+    100% {
+        border-image-source: linear-gradient(90deg, #7B00FF, #FF00FF);
+        border-image-slice: 1;
+    }
+}
+
+.animated-border {
+    border: 3px solid transparent;
+    border-image-source: linear-gradient(90deg, #7B00FF, #FF00FF);
+    border-image-slice: 1;
+    animation: glowing-border 2s infinite linear;
+    border-radius: 12px;
+    padding: 20px;
+}
