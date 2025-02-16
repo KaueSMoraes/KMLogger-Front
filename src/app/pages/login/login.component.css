@@ -1,0 +1,28 @@
+/* Centraliza o login-container */
+.login-container {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  height: 100vh; /* Ocupa toda a altura da tela */
+}
+
+/* Estiliza o card de login */
+.login-card {
+  width: 350px; /* Define uma largura padrão */
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra leve */
+  border-radius: 8px;
+}
+
+/* Garante que os inputs e botões ocupem toda a largura do card */
+.full-width {
+  width: 100%;
+}
+
+mat-card-title {
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    font-size: 24px; /* Ajusta o tamanho do texto */
+    font-weight: bold; /* Deixa o texto em negrito */
+    margin-bottom: 16px; /* Dá um espaçamento abaixo */
+}
