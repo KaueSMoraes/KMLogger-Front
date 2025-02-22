@@ -1,17 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { LoginComponent } from './pages/login/login.component';
-import { LogoComponent } from './components/logo/logo.component';
-import { BeginLayoutComponent } from './layouts/begin-layout/begin-layout.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ThemeService } from './services/theme-service.service';
+import { isPlatformBrowser } from '@angular/common';
+
+import { MatIconModule } from '@angular/material/icon';
+
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, 
-    MatSnackBarModule],
+    MatSnackBarModule, MatIconModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'kmlogger';
+  isDarkTheme: boolean = false;
+
+  constructor(private themeService: ThemeService, @Inject(PLATFORM_ID) private platformId: Object) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isDarkTheme = localStorage.getItem('theme') === 'dark';
+    }
+  }
+
+  toggleTheme() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isDarkTheme = !this.isDarkTheme;
+      this.themeService.toggleTheme();
+    }
+  }
 }

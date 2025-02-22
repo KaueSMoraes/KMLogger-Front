@@ -9,9 +9,10 @@ import { BeginLayoutComponent } from "../../layouts/begin-layout/begin-layout.co
 import { LogoComponent } from '../../components/logo/logo.component';
 import { CommonModule } from '@angular/common'; 
 import { BaseComponent } from '../../shared/base-component/base-component.component';
+import { passwordMatchValidator } from '../../shared/validators/password-match.directive';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-sign-up',
   standalone: true,
   imports: [
     FormBuilderComponent, 
@@ -25,22 +26,43 @@ import { BaseComponent } from '../../shared/base-component/base-component.compon
         <div class="logo-container">
           <app-logo></app-logo>
         </div>
+
         <app-form-builder
           [fields]="fields"
           [form]="form"
-          [submitButtonLabel]="'Entrar'"
+          [submitButtonLabel]="'Cadastrar'"
           [extraButtons]="extraButtons"
-          (formSubmit)="onLogin($event)">
-          <h2 form-title>Realize o Login e continue Monitorando</h2>
+          (formSubmit)="onSignUp($event)">
+          <h2 form-title>Crie sua conta</h2>
         </app-form-builder>
       </div>
     </app-begin-layout>
   `
 })
-export class LoginComponent extends BaseComponent {  
+export class SignUpComponent extends BaseComponent {  
   form: FormGroup;
 
   fields = [
+    { 
+      name: 'firstName', 
+      label: 'Nome', 
+      type: 'text', 
+      required: true, 
+      validators: [Validators.required], 
+      errorMessages: {
+        required: 'O Nome é obrigatório.'
+      } as Record<string, string> 
+    },
+    { 
+      name: 'lastName', 
+      label: 'Sobrenome', 
+      type: 'text', 
+      required: true, 
+      validators: [Validators.required], 
+      errorMessages: {
+        required: 'O Sobrenome é obrigatório.'
+      } as Record<string, string> 
+    },  
     { 
       name: 'email', 
       label: 'Email', 
@@ -53,20 +75,42 @@ export class LoginComponent extends BaseComponent {
       } as Record<string, string> 
     },
     { 
+      name: 'phoneNumber', 
+      label: 'Número de Telefone', 
+      type: 'tel', 
+      required: true, 
+      validators: [Validators.required, Validators.pattern(/^\d{10,11}$/)], 
+      errorMessages: {
+        required: 'O Telefone é obrigatório.',
+        pattern: 'Número de telefone inválido. Use 10 ou 11 dígitos.'
+      } as Record<string, string> 
+    },
+    { 
       name: 'password', 
       label: 'Senha', 
       type: 'password', 
       required: true, 
+      validators: [Validators.required, Validators.minLength(6)], 
+      errorMessages: {
+        required: 'A senha é obrigatória.',
+        minLength: 'A senha deve ter pelo menos 6 caracteres.'
+      } as Record<string, string> 
+    },
+    { 
+      name: 'confirmPassword', 
+      label: 'Confirme a Senha', 
+      type: 'password', 
+      required: true, 
       validators: [Validators.required], 
       errorMessages: {
-        required: 'A senha é obrigatória.'
+        required: 'A confirmação da senha é obrigatória.',
+        passwordMismatch: 'As senhas não coincidem.'
       } as Record<string, string> 
     }
   ];
 
   extraButtons = [
-    { label: 'Esqueceu a senha?', action: new EventEmitter<void>() },
-    { label: 'Cadastre-se', action: new EventEmitter<void>() }
+    { label: 'Já tem conta?', action: new EventEmitter<void>() }
   ];
 
   constructor(
@@ -75,23 +119,22 @@ export class LoginComponent extends BaseComponent {
     snackBar: MatSnackBar, 
     router: Router
   ) {
-    super(snackBar, router);
+    super(snackBar, router); 
 
-    const controls: Record<string, any> = {};
+    const controls: any = {};
     this.fields.forEach(field => {
-      controls[field.name] = ['', field.validators ?? []];
+      controls[field.name] = ['', field.validators || []];
     });
 
     this.form = this.fb.group(controls);
 
-    this.extraButtons[0].action.subscribe(() => this.navigateTo('/forgot-password'));
-    this.extraButtons[1].action.subscribe(() => this.navigateTo('/sign-up'));
+    this.extraButtons[0].action.subscribe(() => this.navigateTo('/login'));
   }
 
-  onLogin(formData: any) {
+  onSignUp(formData: any) {
     if (this.form.invalid) return; 
 
-    this.authService.login(formData).subscribe({
+    this.authService.register(formData).subscribe({
       next: (response) => this.showMessage(response, 'success'),
       error: (error) => this.showMessage(error, 'error') 
     });

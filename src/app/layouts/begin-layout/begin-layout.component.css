@@ -4,9 +4,15 @@
     align-items: center;
     width: 100vw;
     height: 100vh; /* Garante que ocupa toda a altura */
-    background: linear-gradient(135deg, #23036A, #310f5f, #2d1663);
-
+    background: radial-gradient(
+        circle at center,  
+        var(--background-color) 20%,  /* Cor central */
+        var(--background-color-secondary) 60%,  /* Transição suave */
+        var(--background-color-tertiary) 100% /* Extremidades */
+    );
     overflow: hidden; 
+    transition: background 0.5s ease-in-out; 
+
 }
 
 .content-section {
