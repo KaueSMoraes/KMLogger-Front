@@ -7,18 +7,20 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BeginLayoutComponent } from "../../layouts/begin-layout/begin-layout.component";
 import { LogoComponent } from '../../components/logo/logo.component';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 import { BaseComponent } from '../../shared/base-component/base-component.component';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { passwordMatchValidator } from '../../shared/validators/password-match.directive';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
   imports: [
-    FormBuilderComponent, 
-    BeginLayoutComponent, 
-    LogoComponent, 
-    CommonModule
+    FormBuilderComponent,
+    BeginLayoutComponent,
+    LogoComponent,
+    CommonModule,
+    NgxMaskDirective
   ],
   template: `
     <app-begin-layout>
@@ -37,75 +39,77 @@ import { passwordMatchValidator } from '../../shared/validators/password-match.d
         </app-form-builder>
       </div>
     </app-begin-layout>
-  `
+  `,
+   providers: [provideNgxMask()]
 })
-export class SignUpComponent extends BaseComponent {  
+export class SignUpComponent extends BaseComponent {
   form: FormGroup;
 
   fields = [
-    { 
-      name: 'firstName', 
-      label: 'Nome', 
-      type: 'text', 
-      required: true, 
-      validators: [Validators.required], 
+    {
+      name: 'firstName',
+      label: 'Nome',
+      type: 'text',
+      required: true,
+      validators: [Validators.required],
       errorMessages: {
         required: 'O Nome é obrigatório.'
-      } as Record<string, string> 
+      } as Record<string, string>
     },
-    { 
-      name: 'lastName', 
-      label: 'Sobrenome', 
-      type: 'text', 
-      required: true, 
-      validators: [Validators.required], 
+    {
+      name: 'lastName',
+      label: 'Sobrenome',
+      type: 'text',
+      required: true,
+      validators: [Validators.required],
       errorMessages: {
         required: 'O Sobrenome é obrigatório.'
-      } as Record<string, string> 
-    },  
-    { 
-      name: 'email', 
-      label: 'Email', 
-      type: 'email', 
-      required: true, 
-      validators: [Validators.required, Validators.email], 
+      } as Record<string, string>
+    },
+    {
+      name: 'email',
+      label: 'Email',
+      type: 'email',
+      required: true,
+      validators: [Validators.required, Validators.email],
       errorMessages: {
         required: 'O Email é obrigatório.',
         email: 'O Email informado é inválido.'
-      } as Record<string, string> 
+      } as Record<string, string>
     },
-    { 
-      name: 'phoneNumber', 
-      label: 'Número de Telefone', 
-      type: 'tel', 
-      required: true, 
-      validators: [Validators.required, Validators.pattern(/^\d{10,11}$/)], 
+    {
+      name: 'phoneNumber',
+      label: 'Número de Telefone',
+      type: 'tel',
+      required: true,
+      mask: '(00) 00000-0000',
+      validators: [Validators.required, Validators.pattern(/^\d{10,11}$/)],
       errorMessages: {
         required: 'O Telefone é obrigatório.',
         pattern: 'Número de telefone inválido. Use 10 ou 11 dígitos.'
-      } as Record<string, string> 
+      } as Record<string, string>
     },
-    { 
-      name: 'password', 
-      label: 'Senha', 
-      type: 'password', 
-      required: true, 
-      validators: [Validators.required, Validators.minLength(6)], 
+    {
+      name: 'password',
+      label: 'Senha',
+      type: 'password',
+      required: true,
+      validators: [Validators.required, Validators.minLength(6)],
       errorMessages: {
         required: 'A senha é obrigatória.',
         minLength: 'A senha deve ter pelo menos 6 caracteres.'
-      } as Record<string, string> 
+      } as Record<string, string>
     },
-    { 
-      name: 'confirmPassword', 
-      label: 'Confirme a Senha', 
-      type: 'password', 
-      required: true, 
-      validators: [Validators.required], 
+    {
+      name: 'confirmPassword',
+      label: 'Confirme a Senha',
+      type: 'password',
+      required: true,
+      validators: [Validators.required , Validators.minLength(6), ],
       errorMessages: {
         required: 'A confirmação da senha é obrigatória.',
         passwordMismatch: 'As senhas não coincidem.'
-      } as Record<string, string> 
+      } as Record<string, string>
     }
   ];
 
@@ -114,29 +118,29 @@ export class SignUpComponent extends BaseComponent {
   ];
 
   constructor(
-    private authService: AuthService, 
-    private fb: FormBuilder, 
-    snackBar: MatSnackBar, 
+    private authService: AuthService,
+    private fb: FormBuilder,
+    snackBar: MatSnackBar,
     router: Router
   ) {
-    super(snackBar, router); 
+    super(snackBar, router);
 
     const controls: any = {};
     this.fields.forEach(field => {
       controls[field.name] = ['', field.validators || []];
     });
 
-    this.form = this.fb.group(controls);
+    this.form = this.fb.group(controls, { validators: passwordMatchValidator('password', 'confirmPassword') });
 
     this.extraButtons[0].action.subscribe(() => this.navigateTo('/login'));
   }
 
   onSignUp(formData: any) {
-    if (this.form.invalid) return; 
+    if (this.form.invalid) return;
 
     this.authService.register(formData).subscribe({
       next: (response) => this.showMessage(response, 'success'),
-      error: (error) => this.showMessage(error, 'error') 
+      error: (error) => this.showMessage(error, 'error')
     });
   }
 }

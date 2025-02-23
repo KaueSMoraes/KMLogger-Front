@@ -15,11 +15,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   selector: 'app-forgot-password',
   standalone: true,
   imports: [
-    FormBuilderComponent, 
-    BeginLayoutComponent, 
-    LogoComponent, 
-    CommonModule, 
-    MatFormFieldModule 
+    FormBuilderComponent,
+    BeginLayoutComponent,
+    LogoComponent,
+    CommonModule,
+    MatFormFieldModule
   ],
   template: `
     <app-begin-layout>
@@ -40,43 +40,43 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     </app-begin-layout>
   `
 })
-export class ForgotPasswordComponent extends BaseComponent { 
-  
+export class ForgotPasswordComponent extends BaseComponent {
+
   form: FormGroup;
 
   fields = [
-    { 
-      name: 'email', 
-      label: 'Email', 
-      type: 'email', 
-      required: true, 
-      validators: [Validators.required, Validators.email], 
+    {
+      name: 'email',
+      label: 'Email',
+      type: 'email',
+      required: true,
+      validators: [Validators.required, Validators.email],
       errorMessages: {
         required: 'O Email é obrigatório.',
         email: 'O Email informado é inválido.'
-      } as Record<string, string> 
+      } as Record<string, string>
     },
-    { 
-      name: 'password', 
-      label: 'Senha', 
-      type: 'password', 
-      required: true, 
-      validators: [Validators.required, Validators.minLength(6)], 
+    {
+      name: 'password',
+      label: 'Senha',
+      type: 'password',
+      required: true,
+      validators: [Validators.required, Validators.minLength(6)],
       errorMessages: {
         required: 'A senha é obrigatória.',
         minLength: 'A senha deve ter pelo menos 6 caracteres.'
-      } as Record<string, string> 
+      } as Record<string, string>
     },
-    { 
-      name: 'confirmPassword', 
-      label: 'Confirme a Senha', 
-      type: 'password', 
-      required: true, 
-      validators: [Validators.required], 
+    {
+      name: 'confirmPassword',
+      label: 'Confirme a Senha',
+      type: 'password',
+      required: true,
+      validators: [Validators.required],
       errorMessages: {
         required: 'A confirmação da senha é obrigatória.',
         passwordMismatch: 'As senhas não coincidem.'
-      } as Record<string, string> 
+      } as Record<string, string>
     }
   ];
 
@@ -84,22 +84,22 @@ export class ForgotPasswordComponent extends BaseComponent {
     { label: 'Cadastre-se', action: new EventEmitter<void>() }
   ];
 
- 
+
   constructor(
-    private authService: AuthService, 
-    private fb: FormBuilder, 
-    snackBar: MatSnackBar, 
+    private authService: AuthService,
+    private fb: FormBuilder,
+    snackBar: MatSnackBar,
     router: Router
   ) {
-    super(snackBar, router); 
+    super(snackBar, router);
 
     this.form = this.fb.group(
       {
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', [Validators.required]]
-      }, 
-      { validators: passwordMatchValidator('password', 'confirmPassword') } 
+      },
+      { validators: passwordMatchValidator('password', 'confirmPassword') }
     );
 
     this.extraButtons[0].action.subscribe(() => this.navigateTo('/sign-up'));
@@ -108,9 +108,12 @@ export class ForgotPasswordComponent extends BaseComponent {
   onForgotPassword(formData: any) {
     if (this.form.invalid) return;
 
-    this.authService.login(formData).subscribe({
-      next: (response) => this.showMessage(response, 'success'), 
-      error: (error) => this.showMessage(error, 'error') 
+    this.authService.forgotPassword(formData.email).subscribe({
+      next: () => {
+        this.showMessage('Código enviado para o email!', 'success');
+        this.router.navigate(['/activate-password'], { queryParams: { email: formData.email } });
+      },
+      error: (error) => this.showMessage(error, 'error')
     });
   }
 }
