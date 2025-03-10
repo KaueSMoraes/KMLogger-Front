@@ -46,10 +46,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     --input-text: #ffffff;
 }
 
-button {
-    background: var(--primary-color);
-    color: var(--text-color);
-}
 
 input.mat-input-element {
     background: var(--input-background);

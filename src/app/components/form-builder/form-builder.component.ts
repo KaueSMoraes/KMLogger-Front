@@ -35,26 +35,38 @@ import { CodeInputComponent } from '../code-input/code-input.component';
           <ng-container *ngFor="let field of fields">
             <mat-form-field *ngIf="field.type !== 'code'" appearance="outline">
               <mat-label>{{ field.label }}</mat-label>
+              
+              <!-- 🔹 Campo SEM máscara -->
               <input
+                *ngIf="!field.mask"
                 matInput
                 [type]="field.type || 'text'"
                 [formControlName]="field.name"
                 [required]="!!field.required"
-                style="color: var(--text-color)" />
+              />
+
+              <!-- 🔹 Campo COM máscara -->
+              <input
+                *ngIf="field.mask"
+                matInput
+                [type]="field.type || 'text'"
+                [formControlName]="field.name"
+                [required]="!!field.required"
+                [mask]="field.mask"
+              />
 
               <mat-error *ngFor="let error of getErrors(field.name)">
                 {{ error }}
               </mat-error>
             </mat-form-field>
-
             <app-code-input *ngIf="field.type === 'code'" [formControlName]="field.name"></app-code-input>
           </ng-container>
 
 
           <div class="button-container">
-              <button mat-raised-button type="submit" style="color: var(--teciary-color) !important;" [disabled]="form.invalid">
-                {{ submitButtonLabel }}
-              </button>
+              <button  mat-button type="submit" [disabled]="form.invalid">
+              {{ submitButtonLabel }}
+            </button>
 
               <button
                 *ngFor="let extraButton of extraButtons"
@@ -69,29 +81,58 @@ import { CodeInputComponent } from '../code-input/code-input.component';
     </div>
   `,
   styles: [`
-    .form-card mat-card {
-      background: transparent;
-      border: 2px solid var(--primary-color);
-      border-radius: 12px;
-      backdrop-filter: blur(10px);
-      padding: 20px;
-      text-align: center;
-      color: white;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      max-width: 400px;
-      width: 100%;
-  }
+      .form-card mat-card {
+        background: transparent;
+        border: 2px solid var(--primary-color);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        padding: 20px;
+        text-align: center;
+        color: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        max-width: 400px;
+        width: 100%;
+    }
 
-    mat-card-title {
-    font-size: 15px;
-    font-weight: bold;
-    color: var(--primary-color);
-  }
+      mat-card-title {
+      font-size: 15px;
+      color: var(--primary-color);
+    }
+    .mdc-text-field--outlined .mdc-notched-outline {
+    border-color: var(--primary-color) !important;
+    transition: border-color 0.3s ease-in-out;
+    }
 
-  mat-form-field {
-      width: 100%;
-      margin-bottom: 15px;
-  }
+    .mdc-text-field--focused .mdc-notched-outline {
+        border-color: var(--secondary-color) !important;
+    }
+
+    .mat-mdc-form-field-infix {
+        padding: 12px 16px !important;
+        height: 48px !important;
+        display: flex;
+        align-items: center !important;
+        box-sizing: border-box; /* Evita que o padding altere o tamanho do input */
+    }
+
+    .mdc-text-field__input {
+        padding-left: 10px !important;
+        text-align: left !important;
+    }
+
+
+    ::ng-deep .mat-mdc-input-element {
+    color: var(--text-color);
+    caret-color: var(--text-color) !important;
+    }
+    .mdc-text-field--invalid .mdc-notched-outline {
+        border-color: #d32f2f !important; 
+    }
+
+    mat-form-field {
+        width: 100%;
+        margin-bottom: 15px;
+    }
 
     input.mat-input-element {
         background: transparent !important;
@@ -101,11 +142,36 @@ import { CodeInputComponent } from '../code-input/code-input.component';
         opacity: 1 !important;
     }
 
-    ::ng-deep input.mat-input-element {
-        color: white !important;
-        caret-color: white !important;
-        opacity: 1 !important;
+    mat-error {
+      margin-top: 1%;
+      font-size: 80% !important;
+      color: #d32f2f !important;
     }
+
+    .mat-form-field-appearance-outline .mat-form-field-outline {
+    border-color: var(--primary-color) !important;
+    }
+
+    .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline {
+    border-color: var(--secondary-color) !important; /* Ajuste para quando o input estiver ativo */
+    }
+
+    /* Quando houver erro no campo */
+    .mat-form-field-appearance-outline.mat-form-field-invalid .mat-form-field-outline {
+        border-color: #d32f2f !important; /* Vermelho para erro */
+    }
+    
+    .mat-input-element {
+    padding: 10px !important;
+    height: 40px !important;
+    line-height: normal !important;
+    text-align: left !important; /* Alinha corretamente o texto */
+    box-sizing: border-box; /* Garante que padding não altere a altura */
+    }
+
+    .mat-form-field-flex {
+    align-items: center !important;
+}
 
     ::ng-deep input.mat-input-element[disabled],
     ::ng-deep input.mat-input-element:disabled {
@@ -113,40 +179,20 @@ import { CodeInputComponent } from '../code-input/code-input.component';
         color: white !important;
     }
 
-    ::ng-deep .mat-form-field-label {
-        color: rgba(255, 255, 255, 0.7) !important;
-    }
 
     ::ng-deep .mat-form-field.mat-focused .mat-form-field-label {
         color: #7B00FF !important;
     }
 
-    ::ng-deep .mat-input-element::placeholder {
-        color: rgba(255, 255, 255, 0.6) !important;
-        opacity: 1 !important;
-    }
-        button {
+    button {
         background: #6200ea;
         color: white !important;
         width: 100%;
         padding: 10px;
         border-radius: 6px;
-        font-weight: bold;
         transition: 0.3s ease;
     }
 
-    /* Estilo do botão habilitado */
-    button.mat-raised-button {
-        background: #6200ea !important;
-        color: #6200ea !important;
-    }
-
-    /* Hover no botão ativado */
-    button.mat-raised-button:hover {
-        background: #5400d4 !important;
-    }
-
-    /* 🔹 Ajustando o layout dos botões */
     .button-container {
         display: flex;
         flex-direction: column;
