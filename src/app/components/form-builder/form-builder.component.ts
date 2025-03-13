@@ -90,13 +90,13 @@ import { CodeInputComponent } from '../code-input/code-input.component';
         text-align: center;
         color: white;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        max-width: 400px;
-        width: 100%;
+        max-width: 100vh;
+        width: 60vh;
     }
 
       mat-card-title {
-      font-size: 15px;
-      color: var(--primary-color);
+      font-size: 14px;
+      color: var(--title-color);
     }
     .mdc-text-field--outlined .mdc-notched-outline {
     border-color: var(--primary-color) !important;
@@ -113,6 +113,7 @@ import { CodeInputComponent } from '../code-input/code-input.component';
         display: flex;
         align-items: center !important;
         box-sizing: border-box; /* Evita que o padding altere o tamanho do input */
+        border-color: black !important;
     }
 
     .mdc-text-field__input {
@@ -132,6 +133,7 @@ import { CodeInputComponent } from '../code-input/code-input.component';
     mat-form-field {
         width: 100%;
         margin-bottom: 15px;
+        color: var(--text-color);
     }
 
     input.mat-input-element {

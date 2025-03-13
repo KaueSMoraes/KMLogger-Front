@@ -92,7 +92,11 @@ export class LoginComponent extends BaseComponent {
     if (this.form.invalid) return; 
 
     this.authService.login(formData).subscribe({
-      next: (response) => this.showMessage(response, 'success'),
+      next: (response) => 
+        {
+          this.showMessage(response.message, 'success');
+          this.navigateTo('/activate-account')
+        },
       error: (error) => this.showMessage(error, 'error') 
     });
   }

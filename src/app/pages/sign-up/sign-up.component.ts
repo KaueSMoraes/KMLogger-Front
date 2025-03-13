@@ -139,7 +139,10 @@ export class SignUpComponent extends BaseComponent {
     if (this.form.invalid) return;
 
     this.authService.register(formData).subscribe({
-      next: (response) => this.showMessage(response, 'success'),
+      next: (response) =>    {
+        this.showMessage(response.message, 'success');
+        this.navigateTo('/activate-account')
+      },
       error: (error) => this.showMessage(error, 'error')
     });
   }
