@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environments';
@@ -77,8 +77,17 @@ export class HttpClientService implements IHttpClient {
     }).pipe(catchError(this.handleError));
   }
 
-  private handleError(error: any) {
+  private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('Erro na requisição:', error);
-    return throwError(() => new Error(error.message || 'Erro desconhecido'));
+  
+    if (error.error && typeof error.error === 'object') {
+      return throwError(() => error.error); 
+    } 
+  
+    // Caso contrário, cria um erro genérico
+    return throwError(() => ({
+      statuscode: error.status,
+      message: error.error || 'Erro desconhecido',
+    }));
   }
 }

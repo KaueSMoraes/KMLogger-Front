@@ -7,28 +7,25 @@ export abstract class BaseComponent {
 
   constructor(protected snackBar: MatSnackBar, protected router: Router) {}
 
-  showMessage(message: string, type: 'success' | 'error' | 'warning') {
-    let panelClass = '';
-
-    switch (type) {
-      case "success":
-        panelClass = "snackbar-success";
-        break;
-      case 'error':
-        panelClass = "snackbar-error";
-        break;
-      case 'warning':
-        panelClass = "snackbar-warning";
-        break;
+  showMessage(response: any, type?: 'success' | 'error' | 'warning') {
+    let message = '';
+  
+    if (response?.notifications && Array.isArray(response.notifications)) {
+      message = response.notifications.map((n: { key: string; message: string }) => n.message).join('\n');
+    } else if (typeof response === 'string') {
+      message = response;
+    } else {
+      message = response?.message ?? 'Ocorreu um erro inesperado.';
     }
-
+  
     this.snackBar.open(message, 'Fechar', {
       duration: 3000,
-      panelClass: [panelClass],
+      panelClass: type ? [`snackbar-${type}`] : [],
       verticalPosition: 'top',
       horizontalPosition: 'center'
     });
   }
+
   protected navigateTo(route: string) {
     this.router.navigate([route]);
   }
