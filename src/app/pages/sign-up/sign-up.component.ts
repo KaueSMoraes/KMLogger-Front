@@ -141,7 +141,6 @@ export class SignUpComponent extends BaseComponent {
     this.authService.register(formData).subscribe({
       next: (response) =>    {
         this.showMessage(response.message, 'success');
-        this.navigateTo('/activate-account')
       },
       error: (error) => this.showMessage(error, 'error')
     });

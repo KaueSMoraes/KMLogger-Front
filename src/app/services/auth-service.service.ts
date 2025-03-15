@@ -22,7 +22,7 @@ export class AuthService {
   }
 
   activate(credentials: { email: string, code: any }, finalEndpoint: string): Observable<any> {
-    return this.httpService.put(
+    return this.  httpService.put(
       this.endpoint + finalEndpoint,
       null,
       {},
@@ -32,10 +32,10 @@ export class AuthService {
   }
 
   forgotPassword(email: string){
-    return this.httpService.post(this.endpoint + "/forgot-password", { email }, {}, true);
+    return this.httpService.put(this.endpoint + "/forgot-password", { email }, {}, true);
   }
 
   resendCode(email: string){
-    return this.httpService.post(this.endpoint + "/resend-code", { email }, {}, true);
+    return this.httpService.put(this.endpoint + "/resend-code", { email }, {}, true);
   }
 }
